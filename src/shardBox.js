@@ -6,7 +6,7 @@ function initShardBox() {
    *  projects (one shard each). `url` is where the caption link goes.
    * ------------------------------------------------------------------ */
   var CONFIG = {
-    name: 'Abbey Mathew',
+    name: 'Abbey Abraham Mathew',
     role: 'Portfolio 2026',
     boxLabel: 'Selected Work',
     /* Six shards, in order. `type` decides which layout the panel uses:
@@ -33,7 +33,7 @@ function initShardBox() {
         desc: 'A digital payment wallet system featuring user authentication, wallet management, account top-ups, peer-to-peer transfers, and transaction tracking. Includes an admin dashboard and transaction analytics for monitoring payment activity.'
       },
       {
-        type: 'project', title: 'Trivia', tag: 'Fullstack Development', url: 'https://example.com/project-2',
+        type: 'project', title: 'Codex', tag: 'Fullstack Development', url: 'https://example.com/project-2',
         year: '2026', role: 'Fullstack Developer', tools: ['React', 'Node', 'Express', 'Socket.IO'],
         desc: 'A real-time multiplayer trivia game featuring private rooms, competitive and cooperative game modes, and synchronized gameplay. Designed around an AI-powered host concept that brings questions to life with narration, personality, and witty commentary.'
       },
@@ -88,7 +88,55 @@ function initShardBox() {
   $('idName').textContent = CONFIG.name;
   $('idRole').textContent = CONFIG.role;
   $('hint').textContent = coarse ? 'Drag to orbit · tap a shard' : 'Drag to orbit · hover a shard';
-  $('idle').textContent = N + ' shards · ' + CONFIG.boxLabel;
+  /* $('idle').textContent = N + ' shards · ' + CONFIG.boxLabel; */
+
+  $('idle').textContent = 'SHARD//ARCHIVE';
+
+  /* ---------- synthesized interface audio ---------- */
+  // Interface sounds are always enabled; there is no user-facing toggle.
+  var soundEnabled = true;
+  var audioCtx = null;
+
+  function getAudioContext() {
+    var AudioCtor = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtor) return null;
+    if (!audioCtx) audioCtx = new AudioCtor();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    return audioCtx;
+  }
+
+  function tone(freq, endFreq, duration, volume, wave, delay) {
+    if (!soundEnabled) return;
+    var ctx = getAudioContext();
+    if (!ctx) return;
+    var start = ctx.currentTime + (delay || 0);
+    var osc = ctx.createOscillator();
+    var gain = ctx.createGain();
+    osc.type = wave || 'sine';
+    osc.frequency.setValueAtTime(freq, start);
+    if (endFreq) osc.frequency.exponentialRampToValueAtTime(Math.max(1, endFreq), start + duration);
+    gain.gain.setValueAtTime(0.0001, start);
+    gain.gain.exponentialRampToValueAtTime(volume || 0.035, start + 0.012);
+    gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(start);
+    osc.stop(start + duration + 0.025);
+  }
+
+  function playUiSound(kind) {
+    if (!soundEnabled) return;
+    if (kind === 'hover') {
+      tone(620, 880, 0.075, 0.018, 'sine');
+    } else if (kind === 'select') {
+      tone(260, 520, 0.16, 0.045, 'triangle');
+      tone(780, 1040, 0.11, 0.018, 'sine', 0.055);
+    } else if (kind === 'close') {
+      tone(520, 230, 0.14, 0.035, 'triangle');
+    } else if (kind === 'toggle') {
+      tone(420, 700, 0.09, 0.025, 'sine');
+    }
+  }
 
   /* ---------- renderer ---------- */
   var canvas = $('gl'), stage = $('stage');
@@ -148,21 +196,21 @@ function initShardBox() {
     x.fillStyle = g; x.fillRect(0, 0, size, size);
     var t = new THREE.CanvasTexture(c); t.encoding = THREE.sRGBEncoding; return t;
   }
-  function makeLabelTexture() {
-    var W = 2400, H = 200, c = document.createElement('canvas'); c.width = W; c.height = H;
-    var x = c.getContext('2d');
-    x.font = '500 54px "JetBrains Mono", ui-monospace, Menlo, monospace';
-    x.textBaseline = 'middle'; x.fillStyle = '#e0bd68';
-    var sp = 22, gap = 110;
-    function width(s) { var w = 0; for (var i = 0; i < s.length; i++) w += x.measureText(s[i]).width + sp; return w - sp; }
-    function draw(s, x0) { var cx = x0; for (var i = 0; i < s.length; i++) { x.fillText(s[i], cx, H / 2); cx += x.measureText(s[i]).width + sp; } }
-    var l = CONFIG.name.toUpperCase(), r = CONFIG.boxLabel.toUpperCase(), sl = x.measureText('/').width;
-    var total = width(l) + gap + sl + gap + width(r), x0 = (W - total) / 2;
-    draw(l, x0); x0 += width(l) + gap; x.fillText('/', x0, H / 2); x0 += sl + gap; draw(r, x0);
-    var t = new THREE.CanvasTexture(c); t.encoding = THREE.sRGBEncoding;
-    t.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy()); return t;
-  }
-
+  /*   function makeLabelTexture() {
+      var W = 2400, H = 200, c = document.createElement('canvas'); c.width = W; c.height = H;
+      var x = c.getContext('2d');
+      x.font = '500 54px "JetBrains Mono", ui-monospace, Menlo, monospace';
+      x.textBaseline = 'middle'; x.fillStyle = '#e0bd68';
+      var sp = 22, gap = 110;
+      function width(s) { var w = 0; for (var i = 0; i < s.length; i++) w += x.measureText(s[i]).width + sp; return w - sp; }
+      function draw(s, x0) { var cx = x0; for (var i = 0; i < s.length; i++) { x.fillText(s[i], cx, H / 2); cx += x.measureText(s[i]).width + sp; } }
+      var l = CONFIG.name.toUpperCase(), r = CONFIG.boxLabel.toUpperCase(), sl = x.measureText('/').width;
+      var total = width(l) + gap + sl + gap + width(r), x0 = (W - total) / 2;
+      draw(l, x0); x0 += width(l) + gap; x.fillText('/', x0, H / 2); x0 += sl + gap; draw(r, x0);
+      var t = new THREE.CanvasTexture(c); t.encoding = THREE.sRGBEncoding;
+      t.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy()); return t;
+    }
+   */
   function makeTexture(img, color) {
     var w = 1024, h = Math.round(w * img.height / img.width);
     var c = document.createElement('canvas');
@@ -302,10 +350,10 @@ function initShardBox() {
     rig.add(new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(rimPts), lineMat));
 
     // engraved label on the long front face
-    var pw = BOX_L * 0.88;
+    /* var pw = BOX_L * 0.88;
     var label = new THREE.Mesh(new THREE.PlaneGeometry(pw, pw * 200 / 2400),
       new THREE.MeshBasicMaterial({ map: labelTex, transparent: true, depthWrite: false, toneMapped: false }));
-    label.position.set(0, BOX_H * 0.5, BOX_D / 2 + 0.003); rig.add(label);
+    label.position.set(0, BOX_H * 0.5, BOX_D / 2 + 0.003); rig.add(label); */
 
     // slot dividers: chamfered gunmetal blocks with gold caps, one slot per shard
     function box(w, h, d, x, y, z, mat, parent) {
@@ -425,16 +473,21 @@ function initShardBox() {
   }
   function updateHud(i) {
     if (i === shown) return; shown = i;
+    if (i !== null && i >= 0) playUiSound('hover');
     dotEls.forEach(function (d, k) { d.classList.toggle('on', k === i); });
     if (i === null) { cap.hidden = true; idle.hidden = false; return; }
     var p = CONFIG.shards[i];
+    $('hud').style.setProperty('--accent', '#' + HOVER_COLORS[i].toString(16).padStart(6, '0'));
+    var accent = '#' + HOVER_COLORS[i].toString(16).padStart(6, '0');
+    cap.style.setProperty('--accent', accent);
     cap.textContent = '';
     var n = document.createElement('span'); n.className = 'n'; n.textContent = String(i + 1).padStart(2, '0');
     var t = document.createElement('span'); t.textContent = p.title;
-    var s = document.createElement('span'); s.className = 'sep'; s.textContent = '—';
-    var k = document.createElement('span'); k.textContent = p.tag;
+    /* var s = document.createElement('span'); s.className = 'sep'; s.textContent = '—';
+    var k = document.createElement('span'); k.textContent = p.tag; */
     var ar = document.createElement('span'); ar.className = 'ar'; ar.textContent = p.url ? '↗' : '▸'; ar.setAttribute('aria-hidden', 'true');
-    cap.append(n, t, s, k, ar);
+    /* cap.append(n, t, s, k, ar); */
+    cap.append(n, t, ar);
     if (p.url) { cap.href = p.url; cap.removeAttribute('role'); cap.removeAttribute('tabindex'); }
     else { cap.removeAttribute('href'); cap.setAttribute('role', 'button'); cap.tabIndex = 0; }
     cap.hidden = false; idle.hidden = true;
@@ -549,14 +602,23 @@ function initShardBox() {
     panel.classList.add('open'); panel.setAttribute('aria-hidden', 'false');
   }
   function openPanel(i, viaKeyboard) {
+    playUiSound('select');
     pin = i; openIdx = i; updatePanel(i);
     if (viaKeyboard) pClose.focus();
   }
+
   function closePanel() {
+    if (openIdx !== null) playUiSound('close');
     var hadFocus = panel.contains(document.activeElement), i = openIdx;
-    openIdx = null; pin = null; updatePanel(null);
-    if (hadFocus && i !== null && dotEls[i]) dotEls[i].focus({ preventScroll: true });
+    openIdx = null;
+    pin = null;
+    updatePanel(null);
+    if (hadFocus && i !== null && dotEls[i]) {
+      dotEls[i].focus({ preventScroll: true });
+      pin = null;
+    }
   }
+
   fillCrt($('photoCrt'));
   $('photoId').textContent = 'SUBJ // ' + CONFIG.name.toUpperCase().replace(/\s+/g, '_');
   photo.setAttribute('aria-label', 'Photo of ' + CONFIG.name);
@@ -697,7 +759,7 @@ function initShardBox() {
   ]);
   Promise.all([imgReady, fontsReady]).then(function () {
     fit();
-    build(img, makeLabelTexture());
+    build(img);
     updateHud(null);
     window.addEventListener('resize', fit);
     if (window.ResizeObserver) new ResizeObserver(fit).observe(stage);
