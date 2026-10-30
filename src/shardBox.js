@@ -14,7 +14,7 @@ function initShardBox() {
     shards: [
       {
         type: 'about', title: 'About Me', tag: 'Profile',
-        photo: 'Abbey-pic.png',
+        photo: '/Abbey-pic.png',
         bio: [
           'Software developer who enjoys building interactive web applications and exploring ideas through code.',
           'Skilled in React, Node.js, and Python, with experience tackling challenges across the stack, from crafting intuitive user interfaces to developing the systems behind them. Passionate about learning new technologies, experimenting with creative solutions, and turning interesting ideas into functional projects.'
