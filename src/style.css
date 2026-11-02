@@ -1,4 +1,3 @@
-/* Layout: one full-bleed WebGL stage. A box sits centred on a mirror floor; the HUD is pinned to the corners and bottom-centre. */
 :root {
   --bg: #040605;
   --ink: #d7e6c8;
@@ -258,10 +257,7 @@ body {
   visibility: hidden;
 }
 
-/* ============================ Detail panel ============================
-     Tall cyberpunk slab on the right: angled corners (clip-path), gradient edge, grid + scanline skin.
-     Structure: .panel (glow + slide) > .panel-edge (clipped, 2px gradient border) > .panel-in (clipped, inset by the border).
-     --accent is set per shard from JS. Inner cuts are the outer cuts minus 1.2px so the diagonal border stays an even 2px. */
+/* ============================ Detail panel ============================ */
 .panel {
   --accent: var(--lime);
   --cut: 34px;
@@ -310,7 +306,6 @@ body {
 }
 
 .panel-in::after {
-  /* faint scanlines over everything */
   content: "";
   position: absolute;
   inset: 0;
@@ -908,7 +903,7 @@ a.lab-row:focus-visible,
   }
 }
 
-/* Narrow screens: panel becomes a near-full-height sheet above the dots, and the portrait moves inside it. */
+/* Narrow screens */
 @media (max-width: 1100px) {
   .panel {
     --cut: 26px;
