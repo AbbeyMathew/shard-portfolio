@@ -990,3 +990,9 @@ a.lab-row:focus-visible,
     gap: 10px;
   }
 }
+
+.panel-status {
+  cursor: default;
+  opacity: 0.7;
+  pointer-events: none;
+}

@@ -28,19 +28,19 @@ function initShardBox() {
         skills: ['HTML5', 'CSS3', 'Javascript', 'React.js', 'Node.js', 'Express.js', 'MongoDB', 'Python', 'REST APIs', 'Git']
       },
       {
-        type: 'project', title: 'VectorPay', tag: 'Fullstack Development', url: 'https://example.com/project-1',
+        type: 'project', title: 'VectorPay', tag: 'Fullstack Development', url: 'https://vectorpay-frontend.onrender.com',
         year: '2025', role: 'Fullstack Developer', tools: ['React', 'Node', 'Express', 'MongoDB'],
         desc: 'A digital payment wallet system featuring user authentication, wallet management, account top-ups, peer-to-peer transfers, and transaction tracking. Includes an admin dashboard and transaction analytics for monitoring payment activity.'
       },
       {
-        type: 'project', title: 'Codex', tag: 'Fullstack Development', url: 'https://example.com/project-2',
+        type: 'project', title: 'Codex', tag: 'Fullstack Development', url: 'https://trivia-frontend-9ek1.onrender.com',
         year: '2026', role: 'Fullstack Developer', tools: ['React', 'Node', 'Express', 'Socket.IO'],
         desc: 'A real-time multiplayer trivia game featuring private rooms, competitive and cooperative game modes, and synchronized gameplay. Designed around an AI-powered host concept that brings questions to life with narration, personality, and witty commentary.'
       },
       {
-        type: 'project', title: 'Lingua', tag: 'AI & Language Technology', url: 'https://example.com/project-3',
+        type: 'project', title: 'Lingua', tag: 'AI & Language Technology', status: 'UNDER DEVELOPMENT',
         year: '2026', role: 'Concept & Development', tools: ['Python', 'AI/ML', 'Speech Processing', 'NLP'],
-        desc: 'An adaptive universal translator concept focused on Malayalam and Malayalam-English code-switching, with support for additional languages. Envisioned to provide real-time subtitles and spoken translations through a privacy-conscious hybrid architecture combining local processing with optional cloud services.'
+        desc: 'An adaptive universal translation platform designed to break language barriers by enabling seamless communication between any source language and any desired target language. The vision is to deliver real-time text, subtitles, and spoken translations through an intelligent, privacy-conscious system.'
       },
       {
         type: 'lab', title: 'The Lab', tag: 'Experiments & Prototypes',
@@ -574,9 +574,14 @@ function initShardBox() {
         facts([{ k: 'Year', v: p.year || '—' }, { k: 'Role', v: p.role || '—' }]));
       if (p.tools && p.tools.length) pBody.append(sec('Tools'), chips(p.tools));
       if (p.url) {
-        var a = mk('a', 'panel-link'); extLink(a, p.url);
-        a.append('View project ', arrow());
+        var a = mk('a', 'panel-link');
+        extLink(a, p.url);
+        a.append('View Project ', arrow());
         pFoot.appendChild(a);
+      } else if (p.status) {
+        var status = mk('div', 'panel-link panel-status');
+        status.textContent = p.status;
+        pFoot.appendChild(status);
       }
     }
     pBody.scrollTop = 0;
