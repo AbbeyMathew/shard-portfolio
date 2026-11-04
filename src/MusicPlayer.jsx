@@ -1,15 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 
-// Put your track in /public and point this at it (e.g. public/music.mp3 -> '/music.mp3')
 const SRC = '/music.mp3';
 const KEY = 'shard-music-volume';
 
-
-// "Behind a door" settings, used while a shard panel is open
 const DOOR = { cutoff: 600, dry: 0.4, wet: 0.7, time: 0.4 };
 const OPEN = { cutoff: 18000, dry: 1, wet: 0, time: 0.4 };
 
-// Synthesised room impulse response (decaying stereo noise), so no extra audio asset is needed
 function makeImpulse(ctx, seconds = 2.4, decay = 2.6) {
     const len = Math.floor(ctx.sampleRate * seconds);
     const buf = ctx.createBuffer(2, len, ctx.sampleRate);
@@ -22,8 +18,8 @@ function makeImpulse(ctx, seconds = 2.4, decay = 2.6) {
 
 export default function MusicPlayer({ src = SRC }) {
     const audioRef = useRef(null);
-    const graph = useRef(null);       // Web Audio nodes, built on first play
-    const doorRef = useRef(false);    // true while a shard panel is open
+    const graph = useRef(null);
+    const doorRef = useRef(false);
     const volRef = useRef(0.4);
     const [playing, setPlaying] = useState(false);
     const [error, setError] = useState(false);
@@ -65,7 +61,6 @@ export default function MusicPlayer({ src = SRC }) {
         return graph.current;
     };
 
-    // volume slider -> master gain
     useEffect(() => {
         volRef.current = vol;
         const g = graph.current;
@@ -73,7 +68,6 @@ export default function MusicPlayer({ src = SRC }) {
         try { localStorage.setItem(KEY, String(vol)); } catch { /* storage unavailable */ }
     }, [vol]);
 
-    // watch the HUD: shardBox.js toggles .has-panel on #hud when a panel opens/closes
     useEffect(() => {
         const hud = document.getElementById('hud');
         if (!hud) return undefined;
