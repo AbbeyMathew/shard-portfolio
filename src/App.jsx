@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import initShardBox from './shardBox.js';
+import MusicPlayer from './MusicPlayer.jsx';
 import './style.css';
 
 export default function App() {
@@ -42,6 +43,7 @@ export default function App() {
             <p className="idle" id="idle" />
           </div>
           <nav className="dots" id="dots" aria-label="Sections" />
+          <MusicPlayer />
         </div>
       </div>
       <div id="fallback" hidden>This page needs WebGL to draw the box. Try a recent version of Chrome, Safari or Firefox.</div>
