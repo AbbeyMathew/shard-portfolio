@@ -1,6 +1,6 @@
 # Shard Box Portfolio
 
-React + Vite project converted from the original single-file HTML prototype. The existing visual design, CSS, Three.js scene logic, labels, project placeholders, and interactions have been preserved; the code has been separated into React markup, stylesheet, and scene initialization files.
+An interactive 3D developer portfolio built with React, Vite, Three.js, and JavaScript. Showcasing my projects, skills, and experiments through a futuristic shard-based interface.
 
 ## Run locally
 
